@@ -35,3 +35,22 @@ merger.write(os.path.join(dir,filename))
 print(f'Merged {pdf1.title()} and {pdf2.title()} into {filename}.pdf \n path: {os.path.abspath(filename)}')
 merger.close()
 
+from docx import Document
+
+def merge_docx_files(docx_files, output):
+    merged_document = Document()
+
+    for index, docx_file in enumerate(docx_files):
+        sub_doc = Document(docx_file)
+
+        # Don't add a page break if you've reached the last file.
+        if index < len(docx_files)-1:
+           sub_doc.add_page_break()
+
+        for element in sub_doc.element.body:
+            merged_document.element.body.append(element)
+
+    merged_document.save(output)
+
+# Usage
+merge_docx_files(['/path/to/doc1.docx', '/path/to/doc2.docx'], 'merged.docx')
